@@ -52,7 +52,7 @@ class Core:
         cuenta = self.ob_check.comprobar(cedula, lista_user)
 
         if cuenta != None: #Cuenta existe
-            contraseña = self.ob_check.clave(lista_user, cedula)
+            contraseña = self.ob_check.clave(cuenta) #cuenta
             print("Iniciando sesion...")
             self.menucuenta(cuenta)
 
