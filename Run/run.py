@@ -52,7 +52,7 @@ class Core:
         cuenta = self.ob_check.comprobar(cedula, lista_user)
 
         if cuenta != None: #Cuenta existe
-            contraseña = self.ob_check.clave(cuenta) #cuenta
+            contraseña = self.ob_check.clave(cuenta)
             print("Iniciando sesion...")
             self.menucuenta(cuenta)
 
@@ -193,7 +193,6 @@ class Core:
                     f"Año: {listayear[i]}\n"
                     f"Matricula: {listamatriculas[i]}\n")
 
-
     def editarcliente(self):
         print("\n")
         print("\t\t Editar cliente")
@@ -225,6 +224,7 @@ class Core:
     def eliminarcliente(self, cuenta):
         print("\n")
         print("\t\t Eliminar cliente")
+        print("Nota: al momento de eliminar la cuenta del cliente se eliminaran sus registros")
         cedula = self.ob_entrada.ced("Ingrese la cedula del cliente: ")
         lista_cliente = self.ob_archi.getDatos_cliente("Cliente.txt")
         indice = self.ob_check.indice(cedula, lista_cliente)
@@ -244,6 +244,7 @@ class Core:
                         i].cedula + ";" \
                           + lista_cliente[i].direccion + ";" + lista_cliente[i].telefono + ";\n"
 
+                self.eliminarregistroau(cedula)
                 self.ob_archi.crearAr("Cliente.txt", msg, "w")
                 print("Cuenta eliminada!")
                 self.administrar_clientes(cuenta)
@@ -251,6 +252,42 @@ class Core:
             else:
                 print("Ingreso un caracter incorrecto")
                 self.administrar_clientes(cuenta)
+
+    def eliminarregistroau(self, cedula):
+        lista_au = self.ob_archi.getDatos_au("Automovilistico.txt")
+        listadecedulasau = []
+        for i in range(len(lista_au)):
+            listadecedulasau.append(lista_au[i].cedula)
+        numeroderegistros = listadecedulasau.count(cedula)
+
+        if numeroderegistros == 0:
+            print("Esta cuenta no tenia registros")#HASTA ACA OK
+
+        elif numeroderegistros != 0:
+
+            for i in range(numeroderegistros):
+                lista_au = self.ob_archi.getDatos_au("Automovilistico.txt")
+                indice = self.ob_check.indice(cedula, lista_au)
+                lista_au.pop(indice)
+                msg = ""
+
+                for i in range(len(lista_au)):
+                    msg = msg + lista_au[i].cedula + ";" + lista_au[i].modelo + ";" + str(lista_au[i].year)+ ";" \
+                    + lista_au[i].matricula + ";\n"
+                self.ob_archi.crearAr("Automovilistico.txt", msg, "w")
+            print("Los registros automovilisticos del cliente han sido eliminados correctamente")
+
+
+
+
+
+
+
+
+        #indice = self.ob_check.indicexd(cedula, lista_au)
+        """for i in range(len(lista_au)):
+            numeroderegistros = lista_au[i].cedula #encontrar las veces que se repite la cedula
+        print(numeroderegistros)"""
 
     #Opcion 4
     #Configuracion de cuenta del administrador
